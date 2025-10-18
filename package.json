@@ -1,0 +1,29 @@
+{
+  "name": "pgats-automacao-web-trabalho-final",
+  "version": "1.0.0",
+  "description": "Trabalho Final PGATS - Todos os 10 Test Cases em um único arquivo com modularização e CSS",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run --spec \"cypress/e2e/automation-exercise-complete-flow-modules.cy.js\"",
+    "test:open": "cypress open --e2e",
+    "test:report": "cypress run --spec \"cypress/e2e/automation-exercise-complete-flow-modules.cy.js\"",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "automation",
+    "testing",
+    "pgats",
+    "modular",
+    "css"
+  ],
+  "author": "Renata - PGATS",
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "cypress": "^13.6.2",
+    "cypress-mochawesome-reporter": "^4.0.2"
+  }
+}

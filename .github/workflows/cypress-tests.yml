@@ -1,0 +1,56 @@
+name: PGATS - Trabalho Final - Cypress Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run Cypress Tests - Trabalho Final
+      uses: cypress-io/github-action@v6
+      with:
+        browser: chrome
+        headless: true
+        spec: cypress/e2e/automation-exercise-complete-flow-modules.cy.js
+        record: false
+        parallel: false
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: cypress-results-trabalho-final
+        path: |
+          cypress/reports/
+          cypress/screenshots/
+          cypress/videos/
+        retention-days: 7
+
+    - name: Upload Mochawesome Report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: mochawesome-report-trabalho-final
+        path: cypress/reports/
+        retention-days: 7
