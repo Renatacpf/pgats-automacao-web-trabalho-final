@@ -1,8 +1,4 @@
-// Módulo de Contato - Page Object Model
-// Baseado no padrão da aula PGATS
-
 class ContatoPage {
-  // Seletores do formulário de contato
   get nameInput() { return '[data-qa="name"]' }
   get emailInput() { return '[data-qa="email"]' }
   get subjectInput() { return '[data-qa="subject"]' }
@@ -12,7 +8,6 @@ class ContatoPage {
   get successMessage() { return '.status.alert.alert-success' }
   get homeButton() { return '.btn.btn-success' }
 
-  // Métodos de ação - Padrão da aula
   fillContactForm(name, email, subject, message) {
     cy.get(this.nameInput).type(name)
     cy.get(this.emailInput).type(email)
@@ -26,8 +21,6 @@ class ContatoPage {
 
   submitForm() {
     cy.get(this.submitButton).click()
-
-    // Handle browser alert
     cy.window().then((win) => {
       cy.stub(win, 'alert').as('windowAlert')
     })

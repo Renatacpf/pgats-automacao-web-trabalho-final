@@ -1,9 +1,5 @@
-// Helpers.js - Funções utilitárias com faker.js
-// Baseado no padrão da aula PGATS
-
 import { faker } from '@faker-js/faker'
 
-// Geração de dados de usuário - Padrão da aula
 export function generateUserData() {
   const firstName = faker.person.firstName()
   const lastName = faker.person.lastName()
@@ -29,7 +25,6 @@ export function generateUserData() {
   }
 }
 
-// Geração de dados de contato - Padrão da aula
 export function generateContactData() {
   return {
     name: faker.person.fullName(),
@@ -39,31 +34,26 @@ export function generateContactData() {
   }
 }
 
-// Geração de email único - Padrão da aula
 export function generateUniqueEmail() {
   const timestamp = Date.now()
   return `testuser${timestamp}@example.com`
 }
 
-// Navegação para Signup/Login - Padrão da aula
 export function navigateToSignupLogin() {
   cy.visit('/')
   cy.get('a[href="/login"]').click()
 }
 
-// Login do usuário - Padrão da aula
 export function performLogin(email, password) {
   cy.get('[data-qa="login-email"]').type(email)
   cy.get('[data-qa="login-password"]').type(password, { log: false })
   cy.get('[data-qa="login-button"]').click()
 }
 
-// Verificação de usuário logado - Padrão da aula
 export function verifyUserLoggedIn(username) {
   cy.get('li').contains('Logged in as').should('contain', username)
 }
 
-// Logout seguro - Padrão da aula
 export function performSafeLogout() {
   cy.get('body').then(($body) => {
     if ($body.find('a[href="/logout"]').length > 0) {
@@ -72,7 +62,6 @@ export function performSafeLogout() {
   })
 }
 
-// Limpeza de conta - Padrão da aula
 export function cleanupAccount() {
   cy.get('body').then(($body) => {
     if ($body.find('a[href="/delete_account"]').length > 0) {

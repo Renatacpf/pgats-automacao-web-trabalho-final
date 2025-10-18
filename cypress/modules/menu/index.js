@@ -1,8 +1,5 @@
-// Módulo de Menu/Navegação - Page Object Model
-// Baseado no padrão da aula PGATS
-
 class MenuPage {
-  // Seletores do menu principal
+
   get loginLink() { return 'a[href="/login"]' }
   get logoutLink() { return 'a[href="/logout"]' }
   get deleteAccountLink() { return 'a[href="/delete_account"]' }
@@ -11,7 +8,6 @@ class MenuPage {
   get cartLink() { return 'a[href="/view_cart"]' }
   get loggedInAsText() { return 'li:contains("Logged in as")' }
 
-  // Métodos de navegação - Padrão da aula
   navigateToLogin() {
     cy.get(this.loginLink).click()
   }
@@ -36,7 +32,6 @@ class MenuPage {
     cy.get(this.deleteAccountLink).click()
   }
 
-  // Métodos de verificação
   verifyUserLoggedIn(username) {
     cy.get(this.loggedInAsText).should('contain', username)
   }

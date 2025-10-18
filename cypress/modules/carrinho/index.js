@@ -1,14 +1,9 @@
-// Módulo de Carrinho - Page Object Model
-// Baseado no padrão da aula PGATS
-
 class CarrinhoPage {
-  // Seletores do carrinho
   get cartItems() { return '#cart_info_table tbody tr' }
   get cartTable() { return '#cart_info_table' }
   get proceedToCheckoutButton() { return '.btn.btn-default.check_out' }
   get registerLoginLink() { return 'a[href="/login"]' }
 
-  // Seletores da página de checkout
   get addressDetails() { return '.checkout-information' }
   get deliveryAddress() { return '#address_delivery' }
   get billingAddress() { return '#address_invoice' }
@@ -16,7 +11,6 @@ class CarrinhoPage {
   get commentTextarea() { return 'textarea[name="message"]' }
   get placeOrderButton() { return 'a[href="/payment"]' }
 
-  // Seletores da página de pagamento
   get nameOnCardInput() { return '[data-qa="name-on-card"]' }
   get cardNumberInput() { return '[data-qa="card-number"]' }
   get cvcInput() { return '[data-qa="cvc"]' }
@@ -25,11 +19,9 @@ class CarrinhoPage {
   get payAndConfirmButton() { return '[data-qa="pay-button"]' }
   get orderSuccessMessage() { return '[data-qa="order-placed"]' }
 
-  // Seletores da página de confirmação
   get downloadInvoiceButton() { return '.btn.btn-default.check_out' }
   get continueButton() { return '[data-qa="continue-button"]' }
 
-  // Métodos de verificação do carrinho - Padrão da aula
   verifyCartPage() {
     cy.url().should('include', '/view_cart')
     cy.get(this.cartTable).should('be.visible')
@@ -41,7 +33,6 @@ class CarrinhoPage {
     cy.get(this.proceedToCheckoutButton).should('be.visible').click()
   }
 
-  // Métodos da página de checkout
   verifyCheckoutPage() {
     cy.url().should('include', '/checkout')
     cy.contains('Review Your Order').should('be.visible')
@@ -70,7 +61,6 @@ class CarrinhoPage {
     cy.get(this.placeOrderButton).should('be.visible').click()
   }
 
-  // Métodos da página de pagamento
   verifyPaymentPage() {
     cy.url().should('include', '/payment')
     cy.contains('Payment').should('be.visible')

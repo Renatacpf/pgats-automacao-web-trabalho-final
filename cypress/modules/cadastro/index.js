@@ -1,13 +1,8 @@
-// Módulo de Cadastro - Page Object Model
-// Baseado no padrão da aula PGATS
-
 class CadastroPage {
-  // Seletores do formulário de signup
   get signupNameInput() { return '[data-qa="signup-name"]' }
   get signupEmailInput() { return '[data-qa="signup-email"]' }
   get signupButton() { return '[data-qa="signup-button"]' }
 
-  // Seletores do formulário de cadastro completo
   get genderMrRadio() { return '#id_gender1' }
   get genderMrsRadio() { return '#id_gender2' }
   get passwordInput() { return '[data-qa="password"]' }
@@ -28,12 +23,10 @@ class CadastroPage {
   get mobileNumberInput() { return '[data-qa="mobile_number"]' }
   get createAccountButton() { return '[data-qa="create-account"]' }
 
-  // Seletores de mensagens
   get accountCreatedMessage() { return '[data-qa="account-created"]' }
   get continueButton() { return '[data-qa="continue-button"]' }
   get emailExistsError() { return 'p:contains("Email Address already exist!")' }
 
-  // Métodos de ação - Padrão da aula
   fillBasicSignupForm(name, email) {
     cy.get(this.signupNameInput).type(name)
     cy.get(this.signupEmailInput).type(email)

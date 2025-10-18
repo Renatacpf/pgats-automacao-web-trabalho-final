@@ -1,22 +1,10 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-
 import { faker } from '@faker-js/faker'
 
-// Custom command for user registration
 Cypress.Commands.add('registerUser', (userData) => {
   cy.get('[data-qa="signup-name"]').type(userData.name)
   cy.get('[data-qa="signup-email"]').type(userData.email)
   cy.get('[data-qa="signup-button"]').click()
 
-  // Fill registration form
   cy.get('#id_gender1').check() // Mr.
   cy.get('[data-qa="password"]').type(userData.password)
   cy.get('[data-qa="days"]').select(userData.birthDay)
@@ -40,49 +28,41 @@ Cypress.Commands.add('registerUser', (userData) => {
   cy.get('[data-qa="create-account"]').click()
 })
 
-// Custom command for user login
 Cypress.Commands.add('loginUser', (email, password) => {
   cy.get('[data-qa="login-email"]').type(email)
   cy.get('[data-qa="login-password"]').type(password)
   cy.get('[data-qa="login-button"]').click()
 })
 
-// Custom command to navigate to login page
 Cypress.Commands.add('goToLoginPage', () => {
   cy.visit('/')
   cy.get('a[href="/login"]').click()
 })
 
-// Custom command to navigate to contact us page
 Cypress.Commands.add('goToContactUsPage', () => {
   cy.visit('/')
   cy.get('a[href="/contact_us"]').click()
 })
 
-// Custom command to navigate to products page
 Cypress.Commands.add('goToProductsPage', () => {
   cy.visit('/')
   cy.get('a[href="/products"]').click()
 })
 
-// Custom command to delete account
 Cypress.Commands.add('deleteAccount', () => {
   cy.get('a[href="/delete_account"]').click()
   cy.get('[data-qa="account-deleted"]').should('be.visible')
   cy.get('[data-qa="continue-button"]').click()
 })
 
-// Custom command to logout user
 Cypress.Commands.add('logoutUser', () => {
   cy.get('a[href="/logout"]').click()
 })
 
-// Custom command to generate random email using Faker
 Cypress.Commands.add('generateRandomEmail', () => {
   return faker.internet.email().toLowerCase()
 })
 
-// Custom command to generate test user data using Faker
 Cypress.Commands.add('generateUserData', () => {
   const firstName = faker.person.firstName()
   const lastName = faker.person.lastName()
@@ -108,7 +88,6 @@ Cypress.Commands.add('generateUserData', () => {
   }
 })
 
-// Custom command to generate contact form data using Faker
 Cypress.Commands.add('generateContactData', () => {
   return {
     name: faker.person.fullName(),

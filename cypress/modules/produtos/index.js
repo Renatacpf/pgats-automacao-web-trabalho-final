@@ -1,8 +1,5 @@
-// Módulo de Produtos - Page Object Model
-// Baseado no padrão da aula PGATS
-
 class ProdutosPage {
-  // Seletores da página de produtos
+
   get allProductsTitle() { return '.title.text-center' }
   get productsList() { return '.features_items' }
   get searchInput() { return '#search_product' }
@@ -12,7 +9,6 @@ class ProdutosPage {
   get viewProductLinks() { return 'a[href*="/product_details/"]' }
   get addToCartButtons() { return '.btn.btn-default.add-to-cart' }
 
-  // Seletores da página de detalhes do produto
   get productName() { return '.product-information h2' }
   get productCategory() { return '.product-information p:contains("Category:")' }
   get productPrice() { return '.product-information span span' }
@@ -22,13 +18,11 @@ class ProdutosPage {
   get quantityInput() { return '#quantity' }
   get addToCartButton() { return '.btn.btn-default.cart' }
 
-  // Seletores do modal de confirmação
   get addedToCartModal() { return '#cartModal' }
   get modalTitle() { return '.modal-title' }
   get continueShoppingButton() { return '.btn.btn-success.close-modal' }
   get viewCartButton() { return 'a[href="/view_cart"]' }
 
-  // Métodos de navegação e verificação - Padrão da aula
   verifyAllProductsPage() {
     cy.url().should('include', '/products')
     cy.get(this.allProductsTitle).should('be.visible')
@@ -70,35 +64,28 @@ class ProdutosPage {
   }
 
   addProductToCart(quantity = '1') {
-    // Limpar e definir quantidade se diferente de 1
     if (quantity !== '1') {
       cy.get(this.quantityInput).clear().type(quantity)
     }
 
-    // Clicar em adicionar ao carrinho
     cy.get(this.addToCartButton).click()
 
-    // Aguardar e verificar modal de confirmação
     cy.get(this.addedToCartModal, { timeout: 10000 }).should('be.visible')
     cy.get(this.modalTitle).should('contain', 'Added!')
 
-    // Aguardar um pouco para garantir que o produto foi adicionado
     cy.wait(1000)
   }
 
   clickViewCartFromModal() {
-    // Clicar em "View Cart" no modal de confirmação - seletor mais específico
     cy.get('#cartModal').within(() => {
       cy.get('a[href="/view_cart"]').first().click()
     })
   }
 
   continueShopping() {
-    // Clicar em "Continue Shopping" no modal
     cy.get(this.continueShoppingButton).click()
   }
 
-  // Método simplificado para adicionar produto e ir ao carrinho
   addProductAndGoToCart(quantity = '1') {
     this.addProductToCart(quantity)
     this.clickViewCartFromModal()
