@@ -1,50 +1,28 @@
 class TestFlows {
-  get accountCreatedMessage() { return '[data-qa="account-created"]' }
-  get accountDeletedMessage() { return '[data-qa="account-deleted"]' }
-  get continueButton() { return '[data-qa="continue-button"]' }
-  get loggedInText() { return 'li:contains("Logged in as")' }
-  get deleteAccountLink() { return 'a[href="/delete_account"]' }
-  get logoutLink() { return 'a[href="/logout"]' }
-
-  completeRegistration() {
-    cy.get(this.accountCreatedMessage).should('be.visible')
-    cy.get(this.accountCreatedMessage).should('contain', 'Account Created!')
-    cy.get(this.continueButton).click()
-  }
-
   performSmartLogout() {
     cy.get('body').then(($body) => {
-      if ($body.find(this.logoutLink).length > 0) {
-        cy.get(this.logoutLink).click()
+      if ($body.find('a[href="/logout"]').length > 0) {
+        cy.get('a[href="/logout"]').click()
       }
     })
   }
 
   deleteUserAccount() {
     cy.get('body').then(($body) => {
-      if ($body.find(this.deleteAccountLink).length > 0) {
-        cy.get(this.deleteAccountLink).click()
-        cy.get(this.accountDeletedMessage).should('be.visible')
-        cy.get(this.continueButton).click()
+      if ($body.find('a[href="/delete_account"]').length > 0) {
+        cy.get('a[href="/delete_account"]').click()
+        cy.get('[data-qa="account-deleted"]').should('be.visible')
+        cy.get('[data-qa="continue-button"]').click()
       }
     })
-  }
-
-  verifyUserLoggedIn(username) {
-    cy.get(this.loggedInText).should('contain', username)
-  }
-
-  verifyLogoutSuccess() {
-    cy.url().should('include', '/login')
-    cy.get('[data-qa="login-email"]').should('be.visible')
   }
 
   cleanupTestAccount(email, password) {
     cy.visit('/', { failOnStatusCode: false })
 
     cy.get('body').then(($body) => {
-      if ($body.find(this.loggedInText).length > 0) {
-        if ($body.find(this.deleteAccountLink).length > 0) {
+      if ($body.find('li:contains("Logged in as")').length > 0) {
+        if ($body.find('a[href="/delete_account"]').length > 0) {
           this.deleteUserAccount()
         }
       } else {
@@ -59,7 +37,7 @@ class TestFlows {
                 cy.get('[data-qa="login-button"]').click()
 
                 cy.get('body').then(($loggedBody) => {
-                  if ($loggedBody.find(this.deleteAccountLink).length > 0) {
+                  if ($loggedBody.find('a[href="/delete_account"]').length > 0) {
                     this.deleteUserAccount()
                   }
                 })

@@ -5,7 +5,7 @@ Cypress.Commands.add('registerUser', (userData) => {
   cy.get('[data-qa="signup-email"]').type(userData.email)
   cy.get('[data-qa="signup-button"]').click()
 
-  cy.get('#id_gender1').check() // Mr.
+  cy.get('#id_gender1').check()
   cy.get('[data-qa="password"]').type(userData.password)
   cy.get('[data-qa="days"]').select(userData.birthDay)
   cy.get('[data-qa="months"]').select(userData.birthMonth)

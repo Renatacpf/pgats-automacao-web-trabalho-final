@@ -6,7 +6,7 @@ import ProdutosPage from '../modules/produtos/index.js'
 import CarrinhoPage from '../modules/carrinho/index.js'
 import SubscriptionPage from '../modules/subscription/index.js'
 import TestFlows from '../modules/testflows/index.js'
-import { generateUserData, generateContactData, generateUniqueEmail } from '../support/helpers.js'
+import { generateUserData, generateContactData, generateUniqueEmail, generatePaymentData } from '../support/helpers.js'
 
 describe('PGATS - Trabalho Final - Todos os Test Cases', () => {
 
@@ -41,9 +41,12 @@ describe('PGATS - Trabalho Final - Todos os Test Cases', () => {
     cadastroPage.fillCompleteAccountForm(testUser)
     cadastroPage.clickCreateAccount()
 
-    testFlows.completeRegistration()
-    testFlows.verifyUserLoggedIn(testUser.name)
-    menuPage.verifyDeleteAccountLinkVisible()
+    cy.get('[data-qa="account-created"]').should('be.visible')
+    cy.get('[data-qa="account-created"]').should('contain', 'Account Created!')
+    cy.get('[data-qa="continue-button"]').click()
+
+    cy.get('li:contains("Logged in as")').should('contain', testUser.name)
+    cy.get('a[href="/delete_account"]').should('be.visible')
   })
 
   it('Test Case 2: Login User with correct email and password', () => {
@@ -51,8 +54,9 @@ describe('PGATS - Trabalho Final - Todos os Test Cases', () => {
     cy.contains('Login to your account')
 
     loginPage.performLogin(testUser.email, testUser.password)
-    testFlows.verifyUserLoggedIn(testUser.name)
-    menuPage.verifyLogoutLinkVisible()
+
+    cy.get('li:contains("Logged in as")').should('contain', testUser.name)
+    cy.get('a[href="/logout"]').should('be.visible')
   })
 
   it('Test Case 3: Login User with incorrect email and password', () => {
@@ -61,16 +65,20 @@ describe('PGATS - Trabalho Final - Todos os Test Cases', () => {
 
     const invalidEmail = generateUniqueEmail()
     loginPage.performLogin(invalidEmail, 'wrongpassword')
-    loginPage.verifyLoginError()
+
+    cy.get('p:contains("Your email or password is incorrect!")').should('be.visible')
   })
 
   it('Test Case 4: Logout User', () => {
     menuPage.navigateToLogin()
     loginPage.performLogin(testUser.email, testUser.password)
-    testFlows.verifyUserLoggedIn(testUser.name)
+
+    cy.get('li:contains("Logged in as")').should('contain', testUser.name)
 
     loginPage.performSmartLogout()
-    testFlows.verifyLogoutSuccess()
+
+    cy.url().should('include', '/login')
+    cy.get('[data-qa="login-email"]').should('be.visible')
   })
 
   it('Test Case 5: Register User with existing email', () => {
@@ -79,7 +87,8 @@ describe('PGATS - Trabalho Final - Todos os Test Cases', () => {
 
     const duplicateUser = generateUserData()
     cadastroPage.fillBasicSignupForm(duplicateUser.name, testUser.email)
-    cadastroPage.verifyEmailExistsError()
+
+    cy.get('p:contains("Email Address already exist!")').should('be.visible')
   })
 
   it('Test Case 6: Contact Us Form', () => {
@@ -97,75 +106,107 @@ describe('PGATS - Trabalho Final - Todos os Test Cases', () => {
     contatoPage.uploadFile('cypress/fixtures/test-image.png')
     contatoPage.submitForm()
 
-    contatoPage.verifySuccessMessage()
+    cy.get('.status.alert.alert-success').should('be.visible')
+    cy.get('.status.alert.alert-success').should('contain', 'Success! Your details have been submitted successfully.')
+
     contatoPage.clickHomeButton()
     cy.url().should('eq', Cypress.config().baseUrl)
   })
 
   it('Test Case 8: Verify All Products and product detail page', () => {
     menuPage.navigateToProducts()
-    produtosPage.verifyAllProductsPage()
-    produtosPage.verifyProductsList()
+
+    cy.url().should('include', '/products')
+    cy.get('.title.text-center').should('be.visible')
+    cy.get('.title.text-center').should('contain', 'All Products')
+    cy.get('.features_items').should('be.visible')
+    cy.get('.productinfo').should('have.length.greaterThan', 0)
 
     produtosPage.clickFirstProduct()
-    produtosPage.verifyProductDetailPage()
+
+    cy.url().should('include', '/product_details/')
+    cy.get('.product-information h2').should('be.visible')
+    cy.get('.product-information p:contains("Category:")').should('be.visible')
+    cy.get('.product-information span span').should('be.visible')
+    cy.get('.product-information p:contains("Availability:")').should('be.visible')
+    cy.get('.product-information p:contains("Condition:")').should('be.visible')
+    cy.get('.product-information p:contains("Brand:")').should('be.visible')
   })
 
   it('Test Case 9: Search Product', () => {
     menuPage.navigateToProducts()
-    produtosPage.verifyAllProductsPage()
+
+    cy.url().should('include', '/products')
+    cy.get('.title.text-center').should('be.visible')
+    cy.get('.title.text-center').should('contain', 'All Products')
 
     const searchTerm = 'Blue Top'
     produtosPage.searchProduct(searchTerm)
-    produtosPage.verifySearchResults()
-    produtosPage.verifySearchResultsContainProduct(searchTerm)
+
+    cy.get('.title.text-center').should('be.visible')
+    cy.get('.title.text-center').should('contain', 'Searched Products')
+    cy.get('.productinfo').should('have.length.greaterThan', 0)
+    cy.get('.productinfo').should('contain.text', searchTerm)
   })
 
   it('Test Case 10: Verify Subscription in home page', () => {
     subscriptionPage.scrollToSubscription()
-    subscriptionPage.verifySubscriptionText()
+
+    cy.get('h2:contains("Subscription")').should('be.visible')
+    cy.get('h2:contains("Subscription")').should('contain', 'Subscription')
 
     const subscriptionEmail = generateUniqueEmail()
     subscriptionPage.subscribeToNewsletter(subscriptionEmail)
-    subscriptionPage.verifySubscriptionSuccess()
+
+    cy.get('.alert-success').should('be.visible')
+    cy.get('.alert-success').should('contain', 'You have been successfully subscribed!')
   })
 
   it('Test Case 15: Place Order: Register before Checkout', () => {
     menuPage.navigateToLogin()
     loginPage.performLogin(testUser.email, testUser.password)
-    testFlows.verifyUserLoggedIn(testUser.name)
+
+    cy.get('li:contains("Logged in as")').should('contain', testUser.name)
 
     menuPage.navigateToProducts()
     produtosPage.clickFirstProduct()
 
     produtosPage.addProductAndGoToCart('2')
 
-    carrinhoPage.verifyCartPage()
+    cy.url().should('include', '/view_cart')
+    cy.get('#cart_info_table').should('be.visible')
+    cy.get('#cart_info_table tbody tr').should('have.length.greaterThan', 0)
+    cy.contains('Shopping Cart').should('be.visible')
+
     carrinhoPage.proceedToCheckout()
 
-    carrinhoPage.verifyCheckoutPage()
-    carrinhoPage.verifyAddressDetails()
-    carrinhoPage.verifyOrderReview()
+    cy.url().should('include', '/checkout')
+    cy.contains('Review Your Order').should('be.visible')
+
+    cy.get('#address_delivery').should('be.visible')
+    cy.get('#address_invoice').should('be.visible')
+    cy.contains('Your delivery address').should('be.visible')
+    cy.contains('Your billing address').should('be.visible')
+
+    cy.get('#cart_info').should('be.visible')
+    cy.contains('Product').should('be.visible')
+    cy.contains('Quantity').should('be.visible')
+    cy.contains('Price').should('be.visible')
+    cy.contains('Total').should('be.visible')
 
     carrinhoPage.addCommentAboutOrder('Test order - Trabalho Final PGATS')
     carrinhoPage.clickPlaceOrder()
 
-    carrinhoPage.verifyPaymentPage()
-    const paymentData = {
-      nameOnCard: testUser.firstName + ' ' + testUser.lastName,
-      cardNumber: '4242424242424242',
-      cvc: '123',
-      expiryMonth: '12',
-      expiryYear: '2025'
-    }
+    cy.url().should('include', '/payment')
+    cy.contains('Payment').should('be.visible')
+    cy.get('[data-qa="name-on-card"]').should('be.visible')
+
+    const paymentData = generatePaymentData(testUser.firstName, testUser.lastName)
     carrinhoPage.fillPaymentDetails(paymentData)
     carrinhoPage.clickPayAndConfirm()
 
-    carrinhoPage.verifyOrderSuccess()
-  })
-
-  after(() => {
-    // Cleanup opcional - comentado para evitar erros na pipeline
-    cy.log('Testes concluídos com sucesso - Test Case 15 funcionando')
+    cy.get('[data-qa="order-placed"]').should('be.visible')
+    cy.contains('Order Placed!').should('be.visible')
+    cy.contains('Congratulations! Your order has been confirmed!').should('be.visible')
   })
 })

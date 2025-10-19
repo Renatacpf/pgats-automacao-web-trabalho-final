@@ -34,6 +34,16 @@ export function generateContactData() {
   }
 }
 
+export function generatePaymentData(firstName, lastName) {
+  return {
+    nameOnCard: `${firstName} ${lastName}`,
+    cardNumber: '4242424242424242',
+    cvc: '123',
+    expiryMonth: '12',
+    expiryYear: '2025'
+  }
+}
+
 export function generateUniqueEmail() {
   const timestamp = Date.now()
   return `testuser${timestamp}@example.com`

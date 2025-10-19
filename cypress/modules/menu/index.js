@@ -1,51 +1,26 @@
 class MenuPage {
-
-  get loginLink() { return 'a[href="/login"]' }
-  get logoutLink() { return 'a[href="/logout"]' }
-  get deleteAccountLink() { return 'a[href="/delete_account"]' }
-  get contactUsLink() { return 'a[href="/contact_us"]' }
-  get productsLink() { return 'a[href="/products"]' }
-  get cartLink() { return 'a[href="/view_cart"]' }
-  get loggedInAsText() { return 'li:contains("Logged in as")' }
-
   navigateToLogin() {
-    cy.get(this.loginLink).click()
+    cy.get('a[href="/login"]').click()
   }
 
   navigateToContactUs() {
-    cy.get(this.contactUsLink).click()
+    cy.get('a[href="/contact_us"]').click()
   }
 
   navigateToProducts() {
-    cy.get(this.productsLink).click()
+    cy.get('a[href="/products"]').click()
   }
 
   navigateToCart() {
-    cy.get(this.cartLink).click()
+    cy.get('a[href="/view_cart"]').click()
   }
 
   logout() {
-    cy.get(this.logoutLink).click()
+    cy.get('a[href="/logout"]').click()
   }
 
   deleteAccount() {
-    cy.get(this.deleteAccountLink).click()
-  }
-
-  verifyUserLoggedIn(username) {
-    cy.get(this.loggedInAsText).should('contain', username)
-  }
-
-  verifyLoginLinkVisible() {
-    cy.get(this.loginLink).should('be.visible')
-  }
-
-  verifyLogoutLinkVisible() {
-    cy.get(this.logoutLink).should('be.visible')
-  }
-
-  verifyDeleteAccountLinkVisible() {
-    cy.get(this.deleteAccountLink).should('be.visible')
+    cy.get('a[href="/delete_account"]').click()
   }
 }
 
